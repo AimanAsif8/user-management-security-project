@@ -1,0 +1,21 @@
+
+<style>
+    .home-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+</style>
+
+
+
+<%- include('navbar') %>
+
+<div class="home-container">
+    <h2>Welcome</h2>
+    <a href="/user/logout" class="btn btn-danger mt-5">Logout</a>
+</div>
+
+<%- include('footer') %>
