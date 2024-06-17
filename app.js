@@ -9,8 +9,8 @@ const adminRouter=require('./router/adminRouter')
 const flash=require('connect-flash')
 const mongodbConnection=require('./config/mongodb')
 const nocache=require('nocache')
-
-
+const passport=require('passport')
+const cookieParser=require('cookie-parser')
 
 
 // port number
@@ -41,6 +41,11 @@ app.use(session({
     resave:false,
     saveUninitialized:true,
 }))
+
+app.use(cookieParser())
+// google auth
+app.use(passport.initialize());
+app.use(passport.session());
 
 // layouts
 app.use(expressLayouts);

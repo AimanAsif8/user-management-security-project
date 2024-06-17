@@ -16,6 +16,9 @@ user.get('/register',userLoginControl.register)
 
 user.post('/register',userLoginControl.registerPost)
 
+user.get('/auth/google',userLoginControl.googleRender)
+user.get('/auth/google/callback',userLoginControl.googleCallback)
+
 user.get('/home',userSection, userHomeControl.home)
 
 user.get('/logout',userLoginControl.logout)
