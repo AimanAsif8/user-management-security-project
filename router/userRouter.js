@@ -1,26 +1,28 @@
-const express=require('express')
-const userSchema = require('../model/userSchema')
-const user=express.Router()
+const express = require('express');
+const userSchema = require('../model/userSchema');
+const user = express.Router();
 
-const userLoginControl=require('../controller/userController/loginController')
-const userHomeControl=require('../controller/userController/homeController')
+const userLoginControl = require('../controller/userController/loginController');
+const userHomeControl = require('../controller/userController/homeController');
 
-const userSection=require('../middleware/userSection')
+// 🆕 Import the JWT middleware
+const verifyToken = require('../middleware/auth'); // Make sure the path is correct
 
-user.get('/',userLoginControl.user)
-user.get('/login',userLoginControl.login)
+user.get('/', userLoginControl.user);
+user.get('/login', userLoginControl.login);
 
-user.post('/login',userLoginControl.loginPost)
+user.post('/login', userLoginControl.loginPost);
 
-user.get('/register',userLoginControl.register)
+user.get('/register', userLoginControl.register);
 
-user.post('/register',userLoginControl.registerPost)
+user.post('/register', userLoginControl.registerPost);
 
-user.get('/auth/google',userLoginControl.googleRender)
-user.get('/auth/google/callback',userLoginControl.googleCallback)
+user.get('/auth/google', userLoginControl.googleRender);
+user.get('/auth/google/callback', userLoginControl.googleCallback);
 
-user.get('/home',userSection, userHomeControl.home)
+// 🆕 Protect home route with verifyToken
+user.get('/home', verifyToken, userHomeControl.home);
 
-user.get('/logout',userLoginControl.logout)
+user.get('/logout', userLoginControl.logout);
 
-module.exports=user
+module.exports = user;
