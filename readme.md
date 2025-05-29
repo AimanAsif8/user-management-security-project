@@ -1,154 +1,174 @@
-# 🔐 Node.js User Management System – Cybersecurity Internship Project
+# Cybersecurity Internship – Web Application Security Project
 
-## 📌 Overview
-
-This project is a mock User Management System built with Node.js, Express, and MongoDB. It was used as a practical project during my 3-week **Cybersecurity Internship** to identify, test, and fix web application vulnerabilities using **manual testing** and **OWASP ZAP**, while implementing best security practices.
+## Overview
+This repository documents the work completed during my cybersecurity internship. The goal was to identify and mitigate security vulnerabilities in a sample Node.js-based user management web application through manual testing, automated tools, and secure coding practices.
 
 ---
 
-## Week 1: Security Assessment
+## Project Objective
+Secure a vulnerable web application by:
+- Identifying security flaws (XSS, SQL Injection, weak password storage)
+- Implementing defensive coding techniques
+- Performing manual and automated penetration testing
+- Logging key security events for auditing
+- Applying OWASP Top 10 principles
 
-### 🔧 Application Setup
-- Cloned the app from GitHub.
-- Installed dependencies using:
+---
+
+## Tools & Technologies Used
+- Node.js, Express.js
+- MongoDB
+- bcrypt, jsonwebtoken, validator, helmet
+- OWASP ZAP
+- Winston (logging)
+- Browser Developer Tools
+
+---
+
+## Weekly Breakdown
+
+### Week 1: Security Assessment
+
+#### 1. Application Setup
+- Cloned a mock User Management System from GitHub.
+- Set up project using:
   ```bash
+  cd user-management-nodejs-mongodb-MVC
   npm install
   npm start
-Explored routes: /signup, /login, /profile.
+Explored key app routes:
 
-Vulnerability Testing
-1. Cross-Site Scripting (XSS)
+Signup
+
+Login
+
+Profile
+
+2. Vulnerability Testing
+Cross-Site Scripting (XSS)
 Injected payload <script>alert('XSS');</script> in signup form.
+➤ Input was accepted, no sanitization.
+Risk: High
+Fix: Add input/output sanitization.
 
-❗ Input was accepted (no sanitization).
+SQL Injection
+Tried admin' OR '1'='1 during login.
+➤ App showed partial protection but may still be vulnerable.
+Risk: Medium
+Fix: Use parameterized queries or ORM.
 
-🔒 Fix: Apply input/output sanitization.
-
-2. SQL Injection
-Tried: admin' OR '1'='1 in login.
-
-⚠ App showed partial protection.
-
-🔒 Fix: Use parameterized queries or ORM.
-
-3. Password Storage
+Password Storage
 Verified usage of bcrypt in package.json.
+➤ Passwords are hashed.
+Risk: Low
+Status: ✅ Secure
 
-✅ Passwords are hashed securely.
+3. OWASP ZAP Scan
+Ran an automated scan at http://localhost:3000
 
-4. OWASP ZAP Scan
-Ran ZAP scan on http://localhost:3000.
+Found low/medium risks and informational alerts.
 
-Found low to medium risks.
-
-Saved report in internship-report/.
+Saved ZAP report for analysis.
 
 Week 2: Implementing Security Measures
-Input Validation
-Used validator package.
+1. Input Validation
+Used validator package to validate email, name, and password.
 
-Blocked invalid email, name, and password:
+Blocked invalid inputs with:
 
 js
 Copy
 Edit
+const validator = require('validator');
 if (!validator.isEmail(email)) {
   return res.status(400).send('Invalid email');
 }
-Password Hashing (Confirmed)
+2. Password Hashing (Confirmed)
 bcrypt.hash() used during signup.
 
-bcrypt.compare() used for login.
+bcrypt.compare() used during login.
 
-JWT Authentication
+3. JWT-based Authentication
 Installed jsonwebtoken.
 
-Implemented token creation and session handling:
+Added session token handling:
 
 js
 Copy
 Edit
-const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: '1h' });
+const token = jwt.sign({ id: user._id }, 'your-secret-key', { expiresIn: '1h' });
 req.session.token = token;
-Securing HTTP Headers
-Installed helmet for HTTP security:
+4. Securing HTTP Headers
+Installed and used helmet:
 
 js
 Copy
 Edit
 const helmet = require('helmet');
 app.use(helmet());
-Summary
+✅ Impact Summary
 Security Feature	Status
-Input Validation	✅ Done
-Password Hashing	✅ Done
-JWT Authentication	✅ Done
-HTTP Headers (Helmet)	✅ Done
+Input Validation	✅ Implemented
+Password Hashing	✅ Verified
+JWT Authentication	✅ Added
+HTTP Headers (Helmet.js)	✅ Secured
 
-Week 3: Advanced Security & Reporting
-Manual Penetration Testing
-Retested XSS and SQLi → Inputs blocked ✅
+Week 3: Advanced Security and Final Reporting
+1. Manual Penetration Testing
+XSS and SQLi re-tested with sanitized inputs → App blocked them ✅
 
-Tried session hijacking → Tampering redirected to login ✅
+Session Hijacking Test: Edited session cookies in DevTools → App redirected to login ✅
 
- Logging with Winston
-Installed and configured winston:
+2. Logging with Winston
+Installed winston and configured logger:
 
 js
 Copy
 Edit
+const winston = require('winston');
 const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({ filename: 'security.log' })
   ]
 });
-Logged app events like:
+Logged:
 
-Server start
+App start
 
 404 errors
 
-Admin route access
+Custom events for route access
 
-✅ Final Security Checklist
+3. Security Checklist
 #	Security Area	Status	Notes
-1	Input Validation	✅ Done	validator package used
-2	Password Hashing	✅ Done	bcrypt used
-3	Secure Headers	✅ Done	helmet middleware added
-4	Session Handling	✅ Secure	JWT & session protection
-5	Logging	✅ Done	Winston implemented
-6	Penetration Testing	✅ Done	XSS, SQLi, session checked
-7	Nmap Scan	❌ Skipped	Optional
+1	Input Validation	✅ Done	Using validator
+2	Password Hashing	✅ Done	bcrypt implemented in Week 1
+3	Secure Headers	✅ Done	Using helmet
+4	Session Handling	✅ Secure	Session tampering protection works
+5	Logging	✅ Done	Winston logs saved to file
+6	Penetration Testing	✅ Done	Manual simulations successful
+7	Nmap Scan	❌ Skipped	Optional task
 
- Conclusion
-During this 3-week internship, I successfully identified and secured a Node.js-based user management system by applying real-world cybersecurity practices:
+Conclusion
+Over the 3-week internship, I identified and mitigated common web vulnerabilities in a Node.js application. The project applied OWASP principles through both automated scanning and manual testing. The app now includes:
 
-Manual and Automated Testing (OWASP ZAP)
+Secure password handling
 
-Fixed vulnerabilities like XSS, SQLi
+Input validation
 
-Added secure authentication with JWT
+Token-based authentication
 
-Implemented logging with Winston
+Logging of security events
 
-Followed OWASP security guidelines
+Mitigation against XSS, SQLi, and session tampering
 
-All reports, code, and logs are stored in the internship-report/ folder.
+📁 Detailed reports are available in the internship-report/ folder.
 
-Tools & Technologies Used
-Node.js + Express
 
-MongoDB
 
-bcrypt
 
-JWT (jsonwebtoken)
 
-Helmet
 
-Validator
 
-Winston (logging)
 
-OWASP ZAP (vulnerability scanner)
